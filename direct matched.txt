@@ -1,0 +1,80 @@
+direct match @ 0
+no direct match
+no direct match
+direct match @ 4
+no direct match
+direct match @ 3
+direct match @ 1
+direct match @ 5
+direct match @ 0
+direct match @ 3
+no direct match
+direct match @ 0
+direct match @ 1
+direct match @ 4
+direct match @ 0
+direct match @ 2
+direct match @ 5
+direct match @ 3
+direct match @ 3
+direct match @ 6
+no direct match
+no direct match
+direct match @ 2
+direct match @ 6
+direct match @ 4
+direct match @ 7
+direct match @ 4
+direct match @ 2
+direct match @ 1
+direct match @ 1
+direct match @ 1
+direct match @ 1
+direct match @ 1
+no direct match
+direct match @ 0
+direct match @ 3
+direct match @ 5
+direct match @ 6
+direct match @ 2
+direct match @ 1
+direct match @ 7
+direct match @ 6
+direct match @ 4
+direct match @ 5
+direct match @ 0
+direct match @ 3
+no direct match 
+direct match @ 3
+direct match @ 0
+direct match @ 4
+direct match @ 7
+direct match @ 6
+no direct match
+direct match @ 5
+direct match @ 1
+direct match @ 2
+direct match @ 2
+direct match @ 2
+direct match @ 0
+direct match @ 2
+direct match @ 0
+direct match @ 1
+direct match @ 7
+direct match @ 3
+direct match @ 2
+no direct match
+direct match @ 6
+direct match @ 4
+direct match @ 0
+direct match @ 1
+direct match @ 4
+direct match @ 3
+direct match @ 0
+direct match @ 2
+direct match @ 7
+no direct match
+no direct match
+direct match @ 0
+direct match @ 5
+no direct match
