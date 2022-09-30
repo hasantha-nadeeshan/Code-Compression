@@ -114,7 +114,9 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
         }
         if(count == 1){
             output.push_back(1);
-            output.push_back(miss_matched_location[0]);
+            for(int k=0 ;k<miss_matched_location.size();k++){
+                output.push_back(miss_matched_location[k]);
+            }
             output.push_back(i);
             break;
         }
@@ -152,7 +154,9 @@ int main(){
             if(single_missed_match_info.size()>0){
                 isCompressed[i]=true;
                // cout<<to_string(i+1)<<"--"<<inputs_original[i]<<" has a "<<to_string(single_missed_match_info[0])<<" missed match with dictonary index "<<to_string(single_missed_match_info[2]+1)<<" at location "<<to_string(single_missed_match_info[1])<<endl;
-                compressed_short[i]="SMM-"+to_string(single_missed_match_info[1])+"-"+to_string(single_missed_match_info[2]);  
+               if(single_missed_match_info[0]==1){
+                    compressed_short[i]="SMM-"+to_string(single_missed_match_info[1])+"-"+to_string(single_missed_match_info[2]);  
+                }
             }
         }
         
@@ -162,6 +166,6 @@ int main(){
     for(int i=0; i<compressed_short.size(); i++){
         cout<<compressed_short[i]<<endl;
     }
-
+    
 }
 
