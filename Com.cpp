@@ -120,21 +120,23 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
             output.push_back(i);
             break;
         }
-        else if(count == 2){         //2 miss matches
+        else if(count == 2 && miss_matched_location[1]-miss_matched_location[0]==1){         //2 miss matches
             output.push_back(2);
-            if(miss_matched_location[1]-miss_matched_location[0]==1){       //consecutive 2 miss matched
-                output.push_back(miss_matched_location[0]);
-                output.push_back(i);
+            output.push_back(miss_matched_location[0]);
+            output.push_back(i);
+            break;
                
+        }
+        else if(count==2 && miss_matched_location[1]-miss_matched_location[0]!=1){                   //different location miss matched 2
+            output.push_back(2);
+            for(int k=0 ;k<miss_matched_location.size();k++){
+                output.push_back(miss_matched_location[k]);
             }
-            else{                   //different location miss matched 2
-                for(int k=0 ;k<miss_matched_location.size();k++){
-                    output.push_back(miss_matched_location[k]);
-                }
-                output.push_back(i);
-            }
+            output.push_back(i);
             break;
         }
+            
+    
     }
     
     return output;
@@ -161,7 +163,7 @@ int main(){
         
     }
     
-    for (int i=0; i<inputs_original.size(); i++){           //single missed match checking
+    for (int i=0; i<inputs_original.size(); i++){           //multiple missed match checking
 
         if (!isCompressed[i]){
             vector<int> missed_match_info = singleMissedMatchInfo(inputs_original[i],dictionary);
