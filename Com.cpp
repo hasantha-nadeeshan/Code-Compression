@@ -120,6 +120,21 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
             output.push_back(i);
             break;
         }
+        else if(count == 2){         //2 miss matches
+            output.push_back(2);
+            if(miss_matched_location[1]-miss_matched_location[0]==1){       //consecutive 2 miss matched
+                output.push_back(miss_matched_location[0]);
+                output.push_back(i);
+               
+            }
+            else{                   //different location miss matched 2
+                for(int k=0 ;k<miss_matched_location.size();k++){
+                    output.push_back(miss_matched_location[k]);
+                }
+                output.push_back(i);
+            }
+            break;
+        }
     }
     
     return output;
@@ -130,7 +145,6 @@ int main(){
     vector<string> dictionary;
     vector<string> compressed_short;
     vector<bool> isCompressed;
-    vector<int> no_of_missed_matched;
     vector<int> relavant_dictionary;
 
     inputs_original = readFile();
@@ -150,12 +164,18 @@ int main(){
     for (int i=0; i<inputs_original.size(); i++){           //single missed match checking
 
         if (!isCompressed[i]){
-            vector<int> single_missed_match_info = singleMissedMatchInfo(inputs_original[i],dictionary);
-            if(single_missed_match_info.size()>0){
+            vector<int> missed_match_info = singleMissedMatchInfo(inputs_original[i],dictionary);
+            if(missed_match_info.size()>0){
                 isCompressed[i]=true;
-               // cout<<to_string(i+1)<<"--"<<inputs_original[i]<<" has a "<<to_string(single_missed_match_info[0])<<" missed match with dictonary index "<<to_string(single_missed_match_info[2]+1)<<" at location "<<to_string(single_missed_match_info[1])<<endl;
-               if(single_missed_match_info[0]==1){
-                    compressed_short[i]="SMM-"+to_string(single_missed_match_info[1])+"-"+to_string(single_missed_match_info[2]);  
+               
+                if(missed_match_info[0]==1){        //single miss matched
+                    compressed_short[i]="SMM-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);  
+                }
+                else if(missed_match_info[0]==2 && missed_match_info.size()==3){      //2 miss matched consecutive
+                    compressed_short[i]="DMMCON-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);
+                }
+                else if (missed_match_info[0]==2 && missed_match_info.size()==4){     //2 miss matched non consecutive
+                    compressed_short[i]="DMMNCON-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2])+"-"+to_string(missed_match_info[3]);
                 }
             }
         }
