@@ -139,11 +139,11 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
             }
                
         }
-        else if(cout == 3 && miss_matched_location[1]-miss_matched_location[0]==miss_matched_location[2]-miss_matched_location[1]){ //3 consecutive miss matche
+        else if((count == 3 && miss_matched_location[1]-miss_matched_location[0]==miss_matched_location[2]-miss_matched_location[1] )||(count==2 && miss_matched_location[1]-miss_matched_location[0]==2)){ //3 consecutive miss matches
             temp_output.push_back(3);
             temp_output.push_back(miss_matched_location[0]);
             temp_output.push_back(i);
-             if(output.size()==0){
+            if(output.size()==0){
                 output = temp_output;
             }
             else if(output[0]>temp_output[0]){
@@ -152,29 +152,33 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
             else if(output[0]<temp_output[0] && output.size()>temp_output.size()){
                 output = temp_output;
             }
-        }
-         else if(cout == 4 && miss_matched_location[1]-miss_matched_location[0]==miss_matched_location[2]-miss_matched_location[1]){ //3 consecutive miss matche
-            temp_output.push_back(3);
-            temp_output.push_back(miss_matched_location[0]);
-            temp_output.push_back(i);
-             if(output.size()==0){
-                output = temp_output;
-            }
-            else if(output[0]>temp_output[0]){
-                output = temp_output;
-            }
-            else if(output[0]<temp_output[0] && output.size()>temp_output.size()){
-                output = temp_output;
-            }
-        }
-        // else if(count==2 && miss_matched_location[1]-miss_matched_location[0]!=1){                   //different location miss matched 2
-        //     output.push_back(2);
-        //     for(int k=0 ;k<miss_matched_location.size();k++){
-        //         output.push_back(miss_matched_location[k]);
-        //     }
-        //     output.push_back(i);
             
-        // }
+        }
+        else if((count == 4 && (miss_matched_location[1]-miss_matched_location[0]==miss_matched_location[2]-miss_matched_location[1]) && (miss_matched_location[2]-miss_matched_location[1]==miss_matched_location[3]-miss_matched_location[2]))
+                ||(count==2 && miss_matched_location[1]-miss_matched_location[0]<4 )
+                ||(count==3 && miss_matched_location[1]-miss_matched_location[0]==2 && miss_matched_location[2]-miss_matched_location[1]==1) 
+                ||(count==3 && miss_matched_location[1]-miss_matched_location[0]==1 && miss_matched_location[2]-miss_matched_location[1]==2)){ //4 consecutive miss matche
+            temp_output.push_back(4);
+            temp_output.push_back(miss_matched_location[0]);
+            temp_output.push_back(i);
+            if(output.size()==0){
+                output = temp_output;
+            }
+            else if(output[0]<temp_output[0]){
+                output = temp_output;
+            }
+           
+        }
+        else if(count==2 && miss_matched_location[1]-miss_matched_location[0]!=1){                   //different location miss matched 2
+            temp_output.push_back(2);
+            for(int k=0 ;k<miss_matched_location.size();k++){
+                temp_output.push_back(miss_matched_location[k]);
+            }
+            temp_output.push_back(i);
+            if(output.size()==0){
+                output = temp_output;
+            }
+        }
             
     
     }
@@ -215,6 +219,12 @@ int main(){
                 }
                 else if(missed_match_info[0]==2 && missed_match_info.size()==3){      //2 miss matched consecutive
                     compressed_short[i]="DMMCON-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);
+                }
+                else if(missed_match_info[0]==3){      //3 miss matched consecutive
+                    compressed_short[i]="TMM-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);
+                }
+                 else if(missed_match_info[0]==4){      //4 miss matched consecutive
+                    compressed_short[i]="FMM-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);
                 }
                 else if (missed_match_info[0]==2 && missed_match_info.size()==4){     //2 miss matched non consecutive
                     compressed_short[i]="DMMNCON-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2])+"-"+to_string(missed_match_info[3]);
