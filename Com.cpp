@@ -104,6 +104,7 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
 
     for(int i=0; i < dictionary.size(); i++){
         int count = 0;
+        vector<int> temp_output;
         vector<int> miss_matched_location;
         for(int j=0; j < input.length(); j++){
             if(input[j] != dictionary[i][j]){
@@ -113,28 +114,44 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
             
         }
         if(count == 1){
-            output.push_back(1);
+            temp_output.push_back(1);
             for(int k=0 ;k<miss_matched_location.size();k++){
-                output.push_back(miss_matched_location[k]);
+                temp_output.push_back(miss_matched_location[k]);
             }
-            output.push_back(i);
+            temp_output.push_back(i);
+            output = temp_output;
             break;
         }
         else if(count == 2 && miss_matched_location[1]-miss_matched_location[0]==1){         //2 miss matches
-            output.push_back(2);
-            output.push_back(miss_matched_location[0]);
-            output.push_back(i);
-            break;
+            temp_output.push_back(2);
+            temp_output.push_back(miss_matched_location[0]);
+            temp_output.push_back(i);
+            if(output.size()==0){
+                output = temp_output;
+            }
+            else if (temp_output[0] == output[0]){
+                if(output.size()>temp_output.size()){
+                    output = temp_output;
+                }
+            }
+            else if(temp_output[0] < output[0]){
+                output = temp_output;
+            }
                
         }
-        else if(count==2 && miss_matched_location[1]-miss_matched_location[0]!=1){                   //different location miss matched 2
-            output.push_back(2);
-            for(int k=0 ;k<miss_matched_location.size();k++){
-                output.push_back(miss_matched_location[k]);
-            }
-            output.push_back(i);
-            break;
-        }
+        // else if(cout == 3 && miss_matched_location[1]-miss_matched_location[0]==miss_matched_location[2]-miss_matched_location[1]){ //3 consecutive miss matche
+        //     output.push_back(3);
+        //     output.push_back(miss_matched_location[0]);
+        //     output.push_back(i);
+        // }
+        // else if(count==2 && miss_matched_location[1]-miss_matched_location[0]!=1){                   //different location miss matched 2
+        //     output.push_back(2);
+        //     for(int k=0 ;k<miss_matched_location.size();k++){
+        //         output.push_back(miss_matched_location[k]);
+        //     }
+        //     output.push_back(i);
+            
+        // }
             
     
     }

@@ -1,14 +1,5 @@
-for(int i = 0; i<no_of_duplicates.size(); i++) {
-    //     for(int j = i+1; j<no_of_duplicates.size(); j++){
-           
-    //         if(no_of_duplicates[j] < no_of_duplicates[i]) {
-    //             temp1 = no_of_duplicates[i];        //count bubble sort
-    //             no_of_duplicates[i] = no_of_duplicates[j];
-    //             no_of_duplicates[j] = temp1;
-    //             temp2 = duplicates[i];              //duplicates bubble sort according to count
-    //             duplicates[i] = duplicates[j];
-    //             duplicates[j] = temp2;
-    //         }
-    //     }
-    //     pass++;
-    // }
+else if(cout == 3 && miss_matched_location[1]-miss_matched_location[0]==miss_matched_location[2]-miss_matched_location[1]){ //3 consecutive miss matche
+        //     output.push_back(3);
+        //     output.push_back(miss_matched_location[0]);
+        //     output.push_back(i);
+        // }
