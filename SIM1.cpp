@@ -374,7 +374,6 @@ int main(){
     vector<string> dictionary;
     vector<string> compressed_short;
     vector<bool> isCompressed;
-    vector<int> relavant_dictionary;
     vector<string> output_without_RLE;
     vector<string> output_with_RLE;
     string concatenated_output;
