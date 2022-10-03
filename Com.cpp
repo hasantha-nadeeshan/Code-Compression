@@ -1,3 +1,4 @@
+/* On my honor, I have neither given nor received unauthorized aid on this assignment */
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -23,7 +24,17 @@ vector<string> readFile(){
     return original;
 
 }
+void writeFile(vector<string> input){
+    fstream my_file;
+	my_file.open("cout", ios::out);
+    ofstream file;
+	file.open("cout.txt");
+	for(int i=0;i<input.size();++i){
+		file<<input[i]<<endl;
+	}
+	file.close();
 
+}
 vector<string> buildDictionary(vector<string> original){
 
     vector<string> duplicates;
@@ -204,7 +215,7 @@ string prefixSelector(string input){
         return "000";
     }
     else{
-        return "100";
+        return "110";
     }
 }
 int startingLocationCorrection(int location){
@@ -245,7 +256,114 @@ string bitMaskCreator(string input, string dictionary){
     }
     return output;
 }
+vector<string> enableRLE(vector<string> input, string (*function)(int,int)){
+    vector<string> output;
+    int i=0;
+    while (i <input.size()) {
+        int count = 0;
+        if(i<input.size()-4) {
+            
+            output.push_back(input[i]);
+            
+            for (int j=i+1; j<i+5; j++){
+                if(input[j]==input[i] && count+i+1==j){
+                    count=count+1;
+                }
+            }
+            
+            if(count>0){
+                output.push_back("000"+function(count-1,2));
+                i=i+count+1;
+            }
+            else{
+                ++i;
+            }
+            
+        }
+        else if(i==input.size()-4){
+             output.push_back(input[i]);
+            
+            for (int j=i+1; j<i+4; j++){
+                if(input[j]==input[i] && count+i+1==j){
+                    count=count+1;
+                }
+            }
+            
+            if(count>0){
+                output.push_back("000"+function(count-1,2));
+                i=i+count+1;
+            }
+            else{
+                ++i;
+            }
+        }
+        else if(i==input.size()-3){
+             output.push_back(input[i]);
+            
+            for (int j=i+1; j<i+3; j++){
+                if(input[j]==input[i] && count+i+1==j){
+                    count=count+1;
+                }
+            }
+            
+            if(count>0){
+                output.push_back("000"+function(count-1,2));
+                i=i+count+1;
+            }
+            else{
+                ++i;
+            }
+        }
+        else if(i==input.size()-2){
+             output.push_back(input[i]);
+            
+            for (int j=i+1; j<i+2; j++){
+                if(input[j]==input[i] && count+i+1==j){
+                    count=count+1;
+                }
+            }
+            
+            if(count>0){
+                output.push_back("000"+function(count-1,2));
+                i=i+count+1;
+            }
+            else{
+                ++i;
+            }
+        }
+        else if(i==input.size()-1){
+            output.push_back(input[i]);
+            ++i;   
+        }     
+        else{
+            ++i;
+        }
+        
+        
+    }
+    return output;
+}
+string superStringCreator(vector<string> input, int len){
+    string output;
+    for(int i=0; i<input.size();i++){
+        output=output+input[i];
+    }
 
+    if(output.size()%len!=0){
+        int remainder = output.size()%len;
+        for(int j=0; j<remainder;j++){
+            output=output+"1";
+        }
+    }
+    return output;
+}
+vector<string> outputCreator(string input, int len){
+    vector<string> output;
+    for(int i=0; i<input.size();i=i+len){
+        output.push_back(input.substr(i,len));
+    }
+    return output;
+}
 int main(){
 
     vector<string> inputs_original;
@@ -254,6 +372,8 @@ int main(){
     vector<bool> isCompressed;
     vector<int> relavant_dictionary;
     vector<string> output_without_RLE;
+    vector<string> output_with_RLE;
+    string concatenated_output;
 
     inputs_original = readFile();
     dictionary = buildDictionary(inputs_original);
@@ -300,16 +420,31 @@ int main(){
                 }
                 else if (missed_match_info[0]==2 && missed_match_info.size()==4){     //2 miss matched non consecutive
                     compressed_short[i]="DMMNCON-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2])+"-"+to_string(missed_match_info[3]);
+                    output_without_RLE[i]=prefixSelector("DMMNCON")+decimaleToBinary(missed_match_info[1],5)+decimaleToBinary(missed_match_info[2],5)+decimaleToBinary(missed_match_info[3],3);
+                
                 }
+                
+            }
+            if(compressed_short[i]=="0") {
+                    compressed_short[i]="ORG-"+inputs_original[i];
+                    output_without_RLE[i]=prefixSelector("ORG")+inputs_original[i];
+                    
+                
             }
         }
         
 
     }
 
-    for(int i=0; i<compressed_short.size(); i++){
-        cout<<output_without_RLE[i]<<endl;
-    }
-  // cout<<decimaleToBinary(7,3)<<endl;
+    output_with_RLE = enableRLE(output_without_RLE,&decimaleToBinary);
+    concatenated_output = superStringCreator(output_with_RLE,32);
+
+    // for(int i=0; i<output_with_RLE.size(); i++){
+    //     cout<<output_with_RLE[i]<<endl;
+    // }
+    cout<<concatenated_output.size()<<endl;
+    
+    
+    writeFile(outputCreator(concatenated_output,32));
 }
 
