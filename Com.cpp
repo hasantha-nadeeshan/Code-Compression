@@ -24,13 +24,15 @@ vector<string> readFile(){
     return original;
 
 }
-void writeFile(vector<string> input){
-    fstream my_file;
-	my_file.open("cout", ios::out);
+void writeFile(vector<string> input, vector<string> dictionary){
     ofstream file;
-	file.open("cout.txt");
+	file.open("cout.txt", ios::out);
 	for(int i=0;i<input.size();++i){
 		file<<input[i]<<endl;
+	}
+    file<<"xxxx"<<endl;
+    for(int i=0;i<dictionary.size();++i){
+		file<<dictionary[i]<<endl;
 	}
 	file.close();
 
