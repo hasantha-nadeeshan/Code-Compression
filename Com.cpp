@@ -89,16 +89,15 @@ bool isDirectMatch(string input, vector<string> dictionary){
     }
     return isMatch;
 }
-string getDirectMatchDictionaryIndex(string input, vector<string>dictionary){
+int getDirectMatchDictionaryIndex(string input, vector<string>dictionary){
     string index = "";
     for(int i=0; i < dictionary.size(); i++){
         if(input == dictionary[i]){
-            index = to_string(i);
-            return index;
+            return i;
         }
     }
 }
-vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
+vector<int> missedMatchedInfo(string input, vector<string>dictionary){
     int dictionary_index =0;
     vector<int> output;
 
@@ -185,6 +184,68 @@ vector<int> singleMissedMatchInfo(string input, vector<string>dictionary){
     
     return output;
 }
+string prefixSelector(string input){
+    if(input=="DR"){
+        return "101";
+    }
+    else if(input=="SMM"){
+        return "010";
+    }
+    else if(input=="DMMCON"){
+        return "011";
+    }
+    else if(input=="FMM" || input=="TMM"){
+        return "001";
+    }
+    else if(input=="DMMNCON"){
+        return "100";
+    }
+    else if(input=="RLE"){
+        return "000";
+    }
+    else{
+        return "100";
+    }
+}
+int startingLocationCorrection(int location){
+    if (location+3>31){
+        return location+31-(location+3);
+    }
+    return location;
+}
+string decimaleToBinary(int n,int len){
+    long long ans = 0;
+    int remainder, i = 1;
+
+    // Until the value of n becomes 0.
+    while(n!=0){
+        remainder = n % 2;
+        ans += remainder*i;
+        i = i * 10;
+        n = n / 2;
+    }
+    if(to_string(ans).size() != len){
+        string output=to_string(ans);
+        for(i=0; i<len-to_string(ans).size();i++){
+            output = "0"+output;
+        }
+        return output;
+    }
+    return to_string(ans);
+    
+	
+    
+}
+string bitMaskCreator(string input, string dictionary){
+    string output="";
+    for(int i=0; i<input.length(); i++){
+        int num1 = stoi(input.substr(i,1));
+        int num2 = stoi(dictionary.substr(i,1));
+        output=output+to_string(num1 ^ num2);
+    }
+    return output;
+}
+
 int main(){
 
     vector<string> inputs_original;
@@ -192,17 +253,23 @@ int main(){
     vector<string> compressed_short;
     vector<bool> isCompressed;
     vector<int> relavant_dictionary;
+    vector<string> output_without_RLE;
 
     inputs_original = readFile();
     dictionary = buildDictionary(inputs_original);
     for(int i= 0; i <inputs_original.size(); i++){          //checking direct matching
+        string output="";
         if(isDirectMatch(inputs_original[i], dictionary)){
             isCompressed.push_back(true);
-            compressed_short.push_back("DR"+getDirectMatchDictionaryIndex(inputs_original[i], dictionary));
+            int index = getDirectMatchDictionaryIndex(inputs_original[i], dictionary);
+            compressed_short.push_back("DR"+to_string(index));
+            output=prefixSelector("DR")+decimaleToBinary(index,3);
+            output_without_RLE.push_back(output);
         }
         else{
            isCompressed.push_back(false);
            compressed_short.push_back("0");
+           output_without_RLE.push_back("0");
         }
         
     }
@@ -210,21 +277,26 @@ int main(){
     for (int i=0; i<inputs_original.size(); i++){           //multiple missed match checking
 
         if (!isCompressed[i]){
-            vector<int> missed_match_info = singleMissedMatchInfo(inputs_original[i],dictionary);
+            vector<int> missed_match_info = missedMatchedInfo(inputs_original[i],dictionary);
             if(missed_match_info.size()>0){
                 isCompressed[i]=true;
                
                 if(missed_match_info[0]==1){        //single miss matched
-                    compressed_short[i]="SMM-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);  
+                    compressed_short[i]="SMM-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]); 
+                    output_without_RLE[i]=prefixSelector("SMM")+decimaleToBinary(missed_match_info[1],5)+decimaleToBinary(missed_match_info[2],3);
                 }
                 else if(missed_match_info[0]==2 && missed_match_info.size()==3){      //2 miss matched consecutive
                     compressed_short[i]="DMMCON-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);
+                    output_without_RLE[i]=prefixSelector("DMMCON")+decimaleToBinary(missed_match_info[1],5)+decimaleToBinary(missed_match_info[2],3);
                 }
                 else if(missed_match_info[0]==3){      //3 miss matched consecutive
                     compressed_short[i]="TMM-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);
+                    output_without_RLE[i]=prefixSelector("TMM")+decimaleToBinary(startingLocationCorrection(missed_match_info[1]),5)+bitMaskCreator(inputs_original[i].substr(startingLocationCorrection(missed_match_info[1]),4),dictionary[missed_match_info[2]].substr(startingLocationCorrection(missed_match_info[1]),4))+decimaleToBinary(missed_match_info[2],3);
                 }
                  else if(missed_match_info[0]==4){      //4 miss matched consecutive
                     compressed_short[i]="FMM-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2]);
+                    output_without_RLE[i]=prefixSelector("FMM")+decimaleToBinary(startingLocationCorrection(missed_match_info[1]),5)+bitMaskCreator(inputs_original[i].substr(startingLocationCorrection(missed_match_info[1]),4),dictionary[missed_match_info[2]].substr(startingLocationCorrection(missed_match_info[1]),4))+decimaleToBinary(missed_match_info[2],3);
+          
                 }
                 else if (missed_match_info[0]==2 && missed_match_info.size()==4){     //2 miss matched non consecutive
                     compressed_short[i]="DMMNCON-"+to_string(missed_match_info[1])+"-"+to_string(missed_match_info[2])+"-"+to_string(missed_match_info[3]);
@@ -236,8 +308,8 @@ int main(){
     }
 
     for(int i=0; i<compressed_short.size(); i++){
-        cout<<compressed_short[i]<<endl;
+        cout<<output_without_RLE[i]<<endl;
     }
-    
+  // cout<<decimaleToBinary(7,3)<<endl;
 }
 
