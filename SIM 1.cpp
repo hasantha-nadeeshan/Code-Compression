@@ -7,11 +7,11 @@
 #include <tuple>
 using namespace std;
 
-vector<string> readFile(){
+vector<string> readFile(string filename){
     
     fstream newfile;
     vector<string> original;
-    newfile.open("original.txt",ios::in); //open a file to perform read operation using file object
+    newfile.open(filename,ios::in); //open a file to perform read operation using file object
     if (newfile.is_open()){ //checking whether the file is open
         string tp;
         while(getline(newfile, tp)){ //read data from file object and put it into string.
@@ -24,9 +24,9 @@ vector<string> readFile(){
     return original;
 
 }
-void writeFile(vector<string> input, vector<string> dictionary){
+void writeFile(string filename,vector<string> input, vector<string> dictionary){
     ofstream file;
-	file.open("cout.txt", ios::out);
+	file.open(filename, ios::out);
 	for(int i=0;i<input.size();++i){
 		file<<input[i]<<endl;
 	}
@@ -366,6 +366,8 @@ vector<string> outputCreator(string input, int len){
     }
     return output;
 }
+
+
 int main(){
 
     vector<string> inputs_original;
@@ -377,7 +379,7 @@ int main(){
     vector<string> output_with_RLE;
     string concatenated_output;
 
-    inputs_original = readFile();
+    inputs_original = readFile("original.txt");
     dictionary = buildDictionary(inputs_original);
     for(int i= 0; i <inputs_original.size(); i++){          //checking direct matching
         string output="";
@@ -440,13 +442,8 @@ int main(){
 
     output_with_RLE = enableRLE(output_without_RLE,&decimaleToBinary);
     concatenated_output = superStringCreator(output_with_RLE,32);
+    
+    writeFile("cout.txt",outputCreator(concatenated_output,32),dictionary);
 
-    // for(int i=0; i<output_with_RLE.size(); i++){
-    //     cout<<output_with_RLE[i]<<endl;
-    // }
-    cout<<concatenated_output.size()<<endl;
-    
-    
-    writeFile(outputCreator(concatenated_output,32));
 }
 
