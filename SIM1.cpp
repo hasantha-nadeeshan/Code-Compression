@@ -16,11 +16,10 @@ vector<string> readFile(string filename){
         string tp;
         while(getline(newfile, tp)){ //read data from file object and put it into string.
             original.push_back(tp);
-            //cout << tp << "\n"; //print the data of the string
+           
         }
     }
     
-    //cout << "Size : " << original.size();
     return original;
 
 }
