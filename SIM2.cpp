@@ -7,7 +7,7 @@
 #include <tuple>
 using namespace std;
 
-vector<string> readFile(string filename){
+vector<string> readInputFile(string filename){
     
     fstream newfile;
     vector<string> original;
@@ -47,17 +47,60 @@ vector<string> dictionaryCreator(string filename){
     
     return original;
 }
+string singleStringCreator(vector<string> input){
+    string output;
+    for(int i=0; i<input.size(); i++){
+        output=output+input[i];
+    }
+    return output;
+}
+vector<string> instructionsSpliter(string input){
+    vector<string> output;
+    int i=0;
+    while(i<input.size()){
+        if(input.substr(i,3)=="000"){
+            output.push_back(input.substr(i,5));
+            i=i+5;
+        }
+        else if(input.substr(i,3)=="001"){
+            output.push_back(input.substr(i,15));
+            i=i+15;
+        }
+        else if(input.substr(i,3)=="010"){
+            output.push_back(input.substr(i,11));
+            i=i+11;
+        }
+        else if(input.substr(i,3)=="011"){
+            output.push_back(input.substr(i,11));
+            i=i+11;
+        }
+        else if(input.substr(i,3)=="100"){
+            output.push_back(input.substr(i,16));
+            i=i+16;
+        }
+        else if(input.substr(i,3)=="101"){
+            output.push_back(input.substr(i,6));
+            i=i+6;
+        }
+        else if(input.substr(i,3)=="110"){
+            output.push_back(input.substr(i,35));
+            i=i+35;
+        }
+        else{
+            break;
+        }
+    }
+    return output;
+}
+
 int main(){
 
-    vector<string> inputs_original=readFile("compressed.txt");
+    vector<string> inputs_original=readInputFile("compressed.txt");
     vector<string> dictionary = dictionaryCreator("compressed.txt");
-
-    for(int i=0; i<inputs_original.size();i++){
-        cout<<inputs_original[i]<<endl;
+    string input_str = singleStringCreator(inputs_original);
+    vector<string> splited_inputs = instructionsSpliter(input_str);
+    
+    for(int i=0; i<splited_inputs.size();i++){
+        cout<<splited_inputs[i]<<endl;
     }
-    cout<<"xxxx"<<endl;
-    for(int i=0; i<dictionary.size();i++){
-        cout<<dictionary[i]<<endl;
-    }
-
 }
