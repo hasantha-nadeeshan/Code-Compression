@@ -127,7 +127,14 @@ string notChanger(string input){
         return "0";
     }
 }
-
+void writeDecompressed(vector<string> input, string filename){
+    ofstream file;
+	file.open(filename, ios::out);
+	for(int i=0;i<input.size();++i){
+		file<<input[i]<<endl;
+	}
+	file.close();
+}
 
 
 int main(){
@@ -152,7 +159,8 @@ int main(){
             int location1 = binaryToDecimal(splited_inputs[i].substr(3,5));
             int location2 = binaryToDecimal(splited_inputs[i].substr(8,5));
             string dic_value = dictionary[binaryToDecimal(dic_index)];
-            string temp_dic_value = dic_value.substr(0,location1)+notChanger(dic_value.substr(location1,1))+dic_value.substr(location1+1,location2-location1-1)+notChanger(dic_value.substr(location2))+dic_value.substr(location2+1);
+            string temp_dic_value =dic_value.replace(location1,1,notChanger(dic_value.substr(location1,1)));
+            temp_dic_value =temp_dic_value.replace(location2,1,notChanger(dic_value.substr(location2,1)));
             decompressed.push_back(temp_dic_value);
         }
         else if(prefix=="001"){
@@ -175,25 +183,17 @@ int main(){
             string dic_value = dictionary[binaryToDecimal(dic_index)];
             string temp_dic_value = dic_value.substr(0,location)+notChanger(dic_value.substr(location,1))+dic_value.substr(location+1);
             decompressed.push_back(temp_dic_value);
-        }
-       
-       
+        }     
         else if(prefix=="000"){
             int itterations=binaryToDecimal(splited_inputs[i].substr(3,2))+1;
 
             for(int j=0; j<itterations; j++){
-                decompressed.push_back(decompressed[i-1]);
+                decompressed.push_back(decompressed[decompressed.size()-1]);
             }
-        }
-      
+        }     
         else{
             decompressed.push_back("0");
         }
     }
-
-    for(int i=0; i<decompressed.size();i++){
-        cout<<decompressed[i]<<endl;
-    }
-    
-    
+    writeDecompressed(decompressed,"dout.txt");
 }
