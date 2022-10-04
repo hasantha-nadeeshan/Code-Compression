@@ -92,6 +92,43 @@ vector<string> instructionsSpliter(string input){
     }
     return output;
 }
+string bitMaskCreator(string input, string dictionary){
+    string output="";
+    for(int i=0; i<input.length(); i++){
+        int num1 = stoi(input.substr(i,1));
+        int num2 = stoi(dictionary.substr(i,1));
+        output=output+to_string(num1 ^ num2);
+    }
+    return output;
+}
+int binaryToDecimal(string input){
+    string output;
+    int n = stoi(input);
+    int num = n;
+    int dec_value = 0;
+    int base = 1;
+    int temp = num;
+    while (temp) {
+        int last_digit = temp % 10;
+        temp = temp / 10;
+ 
+        dec_value += last_digit * base;
+ 
+        base = base * 2;
+    }
+ 
+    return dec_value;
+}
+string notChanger(string input){
+    if(input == "0"){
+        return "1";
+    }
+    else{
+        return "0";
+    }
+}
+
+
 
 int main(){
 
@@ -99,8 +136,64 @@ int main(){
     vector<string> dictionary = dictionaryCreator("compressed.txt");
     string input_str = singleStringCreator(inputs_original);
     vector<string> splited_inputs = instructionsSpliter(input_str);
-    
+    vector<string> decompressed;
     for(int i=0; i<splited_inputs.size();i++){
-        cout<<splited_inputs[i]<<endl;
+        string prefix = splited_inputs[i].substr(0,3);
+        if(prefix=="101"){          //direct match
+            string dic_index= splited_inputs[i].substr(3,3);
+            string dic_value = dictionary[binaryToDecimal(dic_index)];
+            decompressed.push_back(dic_value);
+        }
+        else if(prefix=="110"){         //not compressed - originals
+            decompressed.push_back(splited_inputs[i].substr(3));
+        }
+         else if(prefix=="100"){        
+            string dic_index= splited_inputs[i].substr(13,3);
+            int location1 = binaryToDecimal(splited_inputs[i].substr(3,5));
+            int location2 = binaryToDecimal(splited_inputs[i].substr(8,5));
+            string dic_value = dictionary[binaryToDecimal(dic_index)];
+            string temp_dic_value = dic_value.substr(0,location1)+notChanger(dic_value.substr(location1,1))+dic_value.substr(location1+1,location2-location1-1)+notChanger(dic_value.substr(location2))+dic_value.substr(location2+1);
+            decompressed.push_back(temp_dic_value);
+        }
+        else if(prefix=="001"){
+            string dic_index= splited_inputs[i].substr(12,3);
+            int location = binaryToDecimal(splited_inputs[i].substr(3,5));
+            string dic_value = dictionary[binaryToDecimal(dic_index)];
+            string temp_dic_value =dic_value.replace(location,4,bitMaskCreator(splited_inputs[i].substr(8,4),dic_value.substr(location,4)));
+            decompressed.push_back(temp_dic_value);
+        }
+         else if(prefix=="011"){
+            string dic_index= splited_inputs[i].substr(8,3);
+            int location = binaryToDecimal(splited_inputs[i].substr(3,5));
+            string dic_value = dictionary[binaryToDecimal(dic_index)];
+            string temp_dic_value = dic_value.substr(0,location)+notChanger(dic_value.substr(location,1))+notChanger(dic_value.substr(location+1,1))+dic_value.substr(location+2);
+            decompressed.push_back(temp_dic_value);
+        }
+        else if(prefix=="010"){
+            string dic_index= splited_inputs[i].substr(8,3);
+            int location = binaryToDecimal(splited_inputs[i].substr(3,5));
+            string dic_value = dictionary[binaryToDecimal(dic_index)];
+            string temp_dic_value = dic_value.substr(0,location)+notChanger(dic_value.substr(location,1))+dic_value.substr(location+1);
+            decompressed.push_back(temp_dic_value);
+        }
+       
+       
+        else if(prefix=="000"){
+            int itterations=binaryToDecimal(splited_inputs[i].substr(3,2))+1;
+
+            for(int j=0; j<itterations; j++){
+                decompressed.push_back(decompressed[i-1]);
+            }
+        }
+      
+        else{
+            decompressed.push_back("0");
+        }
     }
+
+    for(int i=0; i<decompressed.size();i++){
+        cout<<decompressed[i]<<endl;
+    }
+    
+    
 }
